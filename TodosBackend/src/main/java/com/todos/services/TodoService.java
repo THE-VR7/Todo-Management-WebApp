@@ -5,6 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.todos.models.Todo;
@@ -65,6 +69,20 @@ public class TodoService {
 		}
 		
 		return null;
+	}
+
+
+	public Page<Todo> getTodosByIndex(String username, int index) {
+		Pageable pageable = PageRequest.of(index, 10,Sort.by("targetDate").descending());
+		Page<Todo> page = todoRepository.findByUsername(username, pageable);
+		return page;
+	}
+
+
+	public Page<Todo> searchTodosForUser(String username, String description, int index) {
+		Pageable pageable = PageRequest.of(index, 10,Sort.by("targetDate").descending());
+		Page<Todo> page = todoRepository.findByUsernameAndDescription(username, description, pageable);
+		return page;
 	}
 
 	

@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,12 @@ public class TodosController {
 	public List<Todo> getAllTodos(@PathVariable String username) {
 		return todoRepository.findByUsername(username);
 //		 return todoService.findAll();
+	}
+	
+	@GetMapping("/gettodosbypage/users/{username}/todos/{index}")
+	public Page<Todo> getTodosByIndex(@PathVariable String username, @PathVariable int index)
+	{
+		return todoService.getTodosByIndex(username,index);
 	}
 
 	@GetMapping("/users/{username}/todos/{id}")
@@ -70,6 +77,12 @@ public class TodosController {
 				.toUri();
 
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@GetMapping("/search/{username}/{description}/{index}")
+	public Page<Todo> searchTodosByIndex(@PathVariable String username, @PathVariable String description, @PathVariable int index)
+	{
+		return todoService.searchTodosForUser(username,description,index);
 	}
 
 }

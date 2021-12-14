@@ -1,0 +1,8 @@
+Search Query for vineet with 5000 rows took : 
+without using index : 
+617 211 216 239 214 213 213 214 
+when username was user1, then also 214 ms was time taken
+
+with using index : 
+508 220 207 209 223 42 43 246
+when username was user1, then 42 ms was time taken

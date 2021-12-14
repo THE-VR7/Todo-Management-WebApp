@@ -95,4 +95,12 @@ public class Todo {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Todo [Id=" + Id + ", username=" + username + ", description=" + description + ", targetDate="
+				+ targetDate + ", isDone=" + isDone + "]";
+	}
+	
+	
+
 }
