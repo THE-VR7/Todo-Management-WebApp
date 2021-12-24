@@ -4,11 +4,16 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Setting;
+
 @Entity
+@Document(indexName = "todo",shards = 1)
 public class Todo {
 
 	@Id
 	@GeneratedValue
+	@org.springframework.data.annotation.Id
 	private Long Id;
 
 	private String username;

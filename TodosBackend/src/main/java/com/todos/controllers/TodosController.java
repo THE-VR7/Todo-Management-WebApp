@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.todos.elasticrepository.TodosSearchRepository;
 import com.todos.models.Todo;
 import com.todos.repository.TodosRepository;
 import com.todos.services.TodoService;
@@ -24,6 +25,9 @@ public class TodosController {
 
 	@Autowired
 	TodosRepository todoRepository;
+	
+	@Autowired
+	private TodosSearchRepository todosSearchRepository;
 
 	@GetMapping("/users/{username}/todos")
 	public List<Todo> getAllTodos(@PathVariable String username) {
@@ -47,6 +51,7 @@ public class TodosController {
 	@DeleteMapping("/users/{username}/todos/{id}")
 	public ResponseEntity<Void> deleteTodo(@PathVariable String username, @PathVariable long id) {
 		todoRepository.deleteById(id);
+		todosSearchRepository.deleteById(id);
 		return ResponseEntity.noContent().build();
 		// return ResponseEntity.notFound().build();
 	}
@@ -59,6 +64,7 @@ public class TodosController {
 
 //		 Todo todoUpdated = todoService.save(todo);
 		Todo todoUpdated = todoRepository.save(todo);
+		todosSearchRepository.save(todo);
 
 		return new ResponseEntity<Todo>(todo, HttpStatus.OK);
 	}
@@ -69,6 +75,7 @@ public class TodosController {
 //		 Todo createdTodo = todoService.save(todo);
 		todo.setUsername(username);
 		Todo createdTodo = todoRepository.save(todo);
+		todosSearchRepository.save(todo);
 
 		// Location
 		// Get current resource url
@@ -83,6 +90,12 @@ public class TodosController {
 	public Page<Todo> searchTodosByIndex(@PathVariable String username, @PathVariable String description, @PathVariable int index)
 	{
 		return todoService.searchTodosForUser(username,description,index);
+	}
+	
+	@GetMapping("/elasticsearch/{username}/{description}/{index}")
+	public Page<Todo> elasticSearchTodosByIndex(@PathVariable String username, @PathVariable String description, @PathVariable int index)
+	{
+		return todoService.elasticSearchTodosForUser(username,description,index);
 	}
 
 }

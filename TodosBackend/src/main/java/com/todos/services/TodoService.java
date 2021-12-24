@@ -13,12 +13,17 @@ import org.springframework.stereotype.Service;
 
 import com.todos.models.Todo;
 import com.todos.repository.TodosRepository;
+import com.todos.elasticrepository.TodosSearchRepository;
 
 @Service
 public class TodoService {
 
 	@Autowired
 	private TodosRepository todoRepository;
+	
+	@Autowired
+	private TodosSearchRepository todosSearchRepository;
+	
 	
 	private static List<Todo> todos = new ArrayList<>();
 	private static long idCounter = 0;
@@ -78,13 +83,15 @@ public class TodoService {
 		return page;
 	}
 
-
 	public Page<Todo> searchTodosForUser(String username, String description, int index) {
 		Pageable pageable = PageRequest.of(index, 10,Sort.by("targetDate").descending());
 		Page<Todo> page = todoRepository.findByUsernameAndDescription(username, description, pageable);
 		return page;
 	}
 
-	
-	
+	public Page<Todo> elasticSearchTodosForUser(String username, String description, int index) {
+		Pageable pageable = PageRequest.of(index, 10,Sort.by("targetDate").descending());
+		Page<Todo> page = todosSearchRepository.findByUsernameAndDescription(username, description, pageable);
+		return page;
+	}
 }
